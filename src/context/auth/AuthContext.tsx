@@ -2,6 +2,7 @@
 
 import React, { createContext, useEffect, useState } from "react";
 import { AuthContextType, User } from "./types";
+import { useRouter } from "next/navigation";
 
 export const AuthContext = createContext<AuthContextType>({
     user: null, login: () => { console.log("Not Logged"); },
@@ -11,6 +12,7 @@ export const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+    const route = useRouter()
     const [user, setUser] = useState<User | null>(null);
 
     // Load user from localStorage on mount
@@ -28,6 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const logout = () => {
         setUser(null)
         localStorage.removeItem("user"); // Remove from localStorage
+        route.push('login')
     };
     return <AuthContext value={{ user, login, logout }}>{children}</AuthContext>
 }

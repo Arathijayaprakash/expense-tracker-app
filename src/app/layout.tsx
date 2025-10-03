@@ -4,6 +4,7 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { ThemeProvider } from "@/context/theme/ThemeProvider";
 import { AuthProvider } from "@/context/auth/AuthContext";
+import StoreProvider from "./StoreProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,9 +21,11 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}>
       <body>
         <ThemeProvider>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
+          <StoreProvider>
+            <AuthProvider>
+              {children}
+            </AuthProvider>
+          </StoreProvider>
         </ThemeProvider>
       </body>
     </html>

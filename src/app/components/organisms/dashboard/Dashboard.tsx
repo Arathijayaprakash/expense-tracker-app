@@ -3,52 +3,24 @@
 import { AuthContext } from "@/context/auth/AuthContext";
 import { useContext, useState } from "react";
 import ExpenseChart from "../../molecules/ExpenseChart";
-import ThemeToggleButton from "../../atoms/ThemeToggleButton";
-
-const mockExpenses = [
-    { date: "2025-09-01", amount: 500 },
-    { date: "2025-09-05", amount: 200 },
-    { date: "2025-09-10", amount: 700 },
-    { date: "2025-09-15", amount: 300 },
-];
+import Sidebar from "../sidebar/sidebar";
+import { useAppSelector } from "@/lib/hooks";
 
 const Dashboard = () => {
     const { user, logout } = useContext(AuthContext);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const expense = useAppSelector((state) => state.expense)
 
     const income = 5000;
-    const expenses = mockExpenses.reduce((acc, cur) => acc + cur.amount, 0);
+    const expenses = expense.reduce((acc, cur) => acc + cur.amount, 0);
     const balance = income - expenses;
 
     return (
-        <div className="flex h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-            {/* Sidebar */}
-            <div
-                className={`fixed md:static top-0 left-0 w-64 bg-white dark:bg-gray-800 shadow-md h-full transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
-                    } transition-transform duration-300 ease-in-out md:translate-x-0`}
-            >
-                <div className="p-4 text-xl font-bold border-b border-gray-200 dark:border-gray-700">
-                    Expense Tracker
-                </div>
-
-                <ul className="p-4 space-y-2">
-                    <li className="hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded">
-                        Dashboard
-                    </li>
-                    <li className="hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded">
-                        Add Expense
-                    </li>
-                    <li className="hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded">
-                        Reports
-                    </li>
-                    <li className="hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded cursor-pointer" onClick={logout}>
-                        Logout
-                    </li>
-                </ul>
-            </div>
+        <div className="h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+            {/* <Sidebar sidebarOpen={sidebarOpen} logout={logout} setSidebarOpen={setSidebarOpen} /> */}
 
             {/* Main content */}
-            <div className="flex-1 flex flex-col md:ml-64">
+            <div>
                 {/* Header */}
                 <div className="flex justify-between items-center p-4 bg-white dark:bg-gray-800 shadow-md">
                     <button
@@ -76,9 +48,6 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow mb-4">
-                    <ExpenseChart />
-                </div>
 
                 {/* Expense Table */}
                 <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
@@ -93,11 +62,11 @@ const Dashboard = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {mockExpenses.map((exp, idx) => (
+                                {expense.map((exp, idx) => (
                                     <tr key={idx} className="border-b border-gray-200 dark:border-gray-700">
                                         <td className="px-4 py-2">{exp.date}</td>
                                         <td className="px-4 py-2">${exp.amount}</td>
-                                        <td className="px-4 py-2">Misc</td>
+                                        <td className="px-4 py-2">{exp.category}</td>
                                     </tr>
                                 ))}
                             </tbody>
