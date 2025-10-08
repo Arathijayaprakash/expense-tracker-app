@@ -5,11 +5,11 @@ import { AuthContextType, User } from "./types";
 import { useRouter } from "next/navigation";
 
 export const AuthContext = createContext<AuthContextType>({
-    user: null, login: () => { console.log("Not Logged"); },
-    logout: function (): void {
-        throw new Error("Function not implemented.");
-    }
+    user: null,
+    login: async () => { },
+    logout: () => { },
 });
+
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const route = useRouter()

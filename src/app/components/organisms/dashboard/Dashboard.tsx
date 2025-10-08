@@ -1,23 +1,35 @@
 "use client";
 
 import { AuthContext } from "@/context/auth/AuthContext";
-import { useContext, useState } from "react";
-import ExpenseChart from "../../molecules/ExpenseChart";
-import Sidebar from "../sidebar/sidebar";
+import { useContext, useMemo, useState } from "react";
 import { useAppSelector } from "@/lib/hooks";
+import { AgGridReact } from "ag-grid-react";
+import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
+import { ExpenseFormData } from "../addExpense/addExpenseSchema";
+
+// Register all Community features
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const Dashboard = () => {
     const { user, logout } = useContext(AuthContext);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const expense = useAppSelector((state) => state.expense)
-
+    const [rowData] = useState<ExpenseFormData[]>(expense);
+    const columnDefs = useMemo<ColDef<ExpenseFormData>[]>(
+        () => [
+            { headerName: "Title", field: "title", sortable: true, filter: true, flex: 1 },
+            { headerName: "Date", field: "date", sortable: true, filter: true, flex: 1 },
+            { headerName: "Amount", field: "amount", sortable: true, filter: true, flex: 1, valueFormatter: (p: any) => `$${p.value}` },
+            { headerName: "Category", field: "category", sortable: true, filter: true, flex: 1 },
+        ],
+        []
+    );
     const income = 5000;
     const expenses = expense.reduce((acc, cur) => acc + cur.amount, 0);
     const balance = income - expenses;
 
     return (
         <div className="h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-            {/* <Sidebar sidebarOpen={sidebarOpen} logout={logout} setSidebarOpen={setSidebarOpen} /> */}
 
             {/* Main content */}
             <div>
@@ -48,29 +60,18 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-
-                {/* Expense Table */}
                 <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-                    <h2 className="text-lg font-bold mb-2">Recent Expenses</h2>
-                    <div className="overflow-x-auto">
-                        <table className="w-full table-auto">
-                            <thead>
-                                <tr className="bg-gray-200 dark:bg-gray-700">
-                                    <th className="px-4 py-2 text-left">Date</th>
-                                    <th className="px-4 py-2 text-left">Amount</th>
-                                    <th className="px-4 py-2 text-left">Category</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {expense.map((exp, idx) => (
-                                    <tr key={idx} className="border-b border-gray-200 dark:border-gray-700">
-                                        <td className="px-4 py-2">{exp.date}</td>
-                                        <td className="px-4 py-2">${exp.amount}</td>
-                                        <td className="px-4 py-2">{exp.category}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <h2 className="text-lg font-bold mb-2 text-gray-900 dark:text-gray-100">
+                        Recent Expenses
+                    </h2>
+
+                    <div
+                        style={{ height: 300, width: "100%" }}
+                    >
+                        <AgGridReact
+                            rowData={rowData}
+                            columnDefs={columnDefs}
+                        />
                     </div>
                 </div>
             </div>
