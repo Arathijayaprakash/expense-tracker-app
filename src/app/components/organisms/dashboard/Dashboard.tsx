@@ -6,15 +6,23 @@ import { useAppSelector } from "@/lib/hooks";
 import { AgGridReact } from "ag-grid-react";
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
 import { ExpenseFormData } from "../addExpense/addExpenseSchema";
+import { ThemeContext } from "@/context/theme/ThemeContext";
+import { themeBalham } from 'ag-grid-community'
 
-// Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const Dashboard = () => {
-    const { user, logout } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
+    const { theme } = useContext(ThemeContext)
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const expense = useAppSelector((state) => state.expense)
     const [rowData] = useState<ExpenseFormData[]>(expense);
+
+    const myTheme = themeBalham.withParams({
+        accentColor: theme === 'dark' ? '#60A5FA' : '#EF4444', // blue in dark, red in light
+        backgroundColor: theme === 'dark' ? '#0f172a' : '#ffffff', // dark bg / light bg
+        foregroundColor: theme === 'dark' ? '#f1f5f9' : '#111827', // text color
+    });
     const columnDefs = useMemo<ColDef<ExpenseFormData>[]>(
         () => [
             { headerName: "Title", field: "title", sortable: true, filter: true, flex: 1 },
@@ -71,6 +79,7 @@ const Dashboard = () => {
                         <AgGridReact
                             rowData={rowData}
                             columnDefs={columnDefs}
+                            theme={myTheme}
                         />
                     </div>
                 </div>
