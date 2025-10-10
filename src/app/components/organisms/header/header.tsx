@@ -13,7 +13,7 @@ export default function Header() {
             >
                 ☰
             </button>
-            <h1 className="text-xl font-bold">Welcome, {user?.name}</h1>
+            <h1 className="text-xl font-bold ml-auto">Welcome, {user?.name}</h1>
         </div>
     )
 }

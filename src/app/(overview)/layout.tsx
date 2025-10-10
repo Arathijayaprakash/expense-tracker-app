@@ -16,10 +16,10 @@ export default function Layout({
     return (
         <div className="h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
             <SidebarProvider>
-                <Header />
-                <div className="flex flex-row min-h-screen">
+                <div className="min-h-screen flex">
                     <Sidebar logout={logout} />
                     <main className="flex-1">
+                        <Header />
                         {children}
                     </main>
                 </div>

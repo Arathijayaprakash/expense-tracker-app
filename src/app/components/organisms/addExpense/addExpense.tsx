@@ -18,7 +18,12 @@ const AddExpense = () => {
         resolver: zodResolver(expenseSchema),
     });
 
-    const onSubmit = (data: ExpenseFormData) => {
+    const onSubmit = async (data: ExpenseFormData) => {
+        await fetch("/api/expenses", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
         dispatch(addExpense(data))
         reset();
         route.push('/dashboard')

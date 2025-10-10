@@ -7,7 +7,6 @@ import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
 import { ExpenseFormData } from "../addExpense/addExpenseSchema";
 import { ThemeContext } from "@/context/theme/ThemeContext";
 import { themeBalham } from 'ag-grid-community'
-import { useSidebar } from "@/context/sidebar/SideBarContext";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
